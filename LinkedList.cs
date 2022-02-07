@@ -136,12 +136,46 @@ namespace StudyChapter3
             }
 
             //Clear
+            public void Clear()
+            {
+
+            }
+
             //Contains --> bool 
+            public bool Contains(int value)
+            {
+                return true;
+            }
+
             //CopyTo
-            //Find
+            public Node CopyTo(Node sourceNode, Node targetNode)
+            {
+                return new Node();
+            }
+
+            //FindIndex
+            public int FindIndex(int value)
+            {
+                return 0;
+            }
+
             //Remove
+            public void Remove(int value)
+            {
+
+            }
+
             //RemoveFirst
+            public void RemoveFirst()
+            {
+
+            }
+
             //RemoveLast
+            public void RemoveLast()
+            {
+
+            }
         }
     }
 
