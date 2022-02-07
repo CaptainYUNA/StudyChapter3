@@ -1,5 +1,7 @@
 ﻿using System;
 
+using static StudyChapter3.YUNALinkedList;
+
 namespace StudyChapter3
 {
     class Program
@@ -41,6 +43,17 @@ namespace StudyChapter3
 
             //int[] array = new int[30];
 
+            var linkedList = new LinkedList();
+            var random = new Random();
+
+            for (int i = 0; i < 5; i++)
+            {
+                linkedList.AddLast(random.Next(100));
+            }
+
+            linkedList.AddLast(99);
+            linkedList.AddAfter(99, 3);
+            linkedList.AddBefore(99, 2);
         }
 
         //private static void CalcArray<T>(T[] array) where T : struct

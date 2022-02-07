@@ -8,78 +8,135 @@ namespace StudyChapter3
     {
         public class Node
         {
-            public int Data { get; private set; }
+            public int Data { get; set; }
             public Node Next { get; set; }
             public Node(int data)
             {
                 Data = data;
                 Next = null;
             }
+
+            public Node()
+            {
+                Data = default;
+                Next = null;
+            }
         }
 
         public class LinkedList
         {
-            public int Count { get => Count; }
-            public Node Head { get; private set; }
+            private Node head;
+
+            public Node GetHead()
+            {
+                return head;
+            }
+
+            private void SetHead(Node value)
+            {
+                head = value;
+            }
 
             //FindLast
+            /// <summary>
+            /// LinkedList에서 마지막 Node를 가져온다.
+            /// </summary>
+            /// <returns></returns>
             public Node FindLast()
             {
-                var lastNode = Head;
+                var lastNode = GetHead();
 
-                while (lastNode != null)
+                if (lastNode == null)
                 {
-                    lastNode = Head.Next;
+                    var node = new Node();
+                    SetHead(node);
+
+                    return node;
+                }
+
+                while (lastNode.Next != null)
+                {
+                    lastNode = lastNode.Next;
                 }
 
                 return lastNode;
             }
 
             //AddAfter
-            public void AddAfter(int previousData, int newData)
+            /// <summary>
+            /// LinkedList에서 Node 중 입력한 값을 갖고 있는 노드를 찾은 후 해당 노드의 다음 노드가 있을 시 
+            /// 연결을 해제하고 새로운 노드를 추가한 뒤 연결 해제한 노드를 재연결한다.
+            /// </summary>
+            /// <param name="value">찾을 값</param>
+            /// <param name="newValue">새로 추가할 값</param>
+            public void AddAfter(int value, int newValue)
             {
-                var preNode = Head;
-                var newNode = new Node(newData);
+                var head = GetHead();
+                var newNode = new Node(newValue);
 
-                while (preNode.Data == previousData)
+                while (head.Data != value)
                 {
-                    preNode.Next = newNode;
+                    head = head.Next;
+                }
+
+                if (head.Next == null)
+                {
+                    head.Next = newNode;
+                }
+                else
+                {
+                    var nextNode = head.Next;
+                    newNode.Next = nextNode;
+                    head.Next = newNode;
                 }
             }
 
             //AddBefore
-            public void AddBefore(int previousData, int newData)
+            /// <summary>
+            /// LinkedList의 Node 중 입력한 값을 갖고 있는 노드를 찾은 후 이전 노드와의 연결을 해제 후
+            /// 새로운 Node를 이전 노드와 연결하고 새로운 Node에 기존 노드를 연결한다.
+            /// </summary>
+            /// <param name="value">찾을 값</param>
+            /// <param name="newValue">새로 추가할 값</param>
+            public void AddBefore(int value, int newValue)
             {
-                var preNode = Head;
-                var newNode = new Node(newData);
+                var head = GetHead();
+                var newNode = new Node(newValue);
+                Node beforeNode = new Node();
 
-                while (preNode.Data == previousData)
+                while (head.Data != value)
                 {
-                    var nextNode = preNode.Next;
-
-                    preNode.Next = newNode;
-                    newNode.Next = nextNode;
+                    beforeNode = head;
+                    head = head.Next;
                 }
+
+                beforeNode.Next = newNode;
+                newNode.Next = head;
             }
 
             //AddLast
-            public void AddLast(int newData)
+            /// <summary>
+            /// LinkedList의 마지막 노드에 새로운 Node를 추가한다.
+            /// </summary>
+            /// <param name="newValue">새로 추가할 값</param>
+            public void AddLast(int newValue)
             {
-                var newNode = new Node(newData);
-                var head = Head;
-
-                if (head == null)
-                {
-                    head.Next = newNode;
-                }
+                var newNode = new Node(newValue);
 
                 var lastNode = FindLast();
 
-                lastNode.Next = newNode;
+                if (lastNode.Data == 0)
+                {
+                    lastNode.Data = newValue;
+                }
+                else
+                {
+                    lastNode.Next = newNode;
+                }
             }
 
             //Clear
-            //Contains
+            //Contains --> bool 
             //CopyTo
             //Find
             //Remove
