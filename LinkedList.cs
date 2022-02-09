@@ -15,288 +15,255 @@ namespace StudyChapter3
                 Data = data;
                 Next = null;
             }
-
-            public Node()
-            {
-                Data = default;
-                Next = null;
-            }
         }
 
         public class LinkedList
         {
-            private Node head;
+            private Node _head;
 
-            public Node GetHead()
-            {
-                return head;
-            }
+            private int _count;
 
-            private void SetHead(Node value)
+            public int Count
             {
-                head = value;
+                get
+                {
+                    return _count;
+                }
+                set
+                {
+                    while (_head.Next != null)
+                    {
+                        _count++;
+                    }
+                }
             }
 
             //FindLast
-            /// <summary>
-            /// LinkedList에서 마지막 Node를 가져온다.
-            /// </summary>
-            /// <returns></returns>
             public Node FindLast()
             {
-                var lastNode = GetHead();
+                var currentNode = _head;
 
-                if (lastNode == null)
+                if (currentNode == null)
                 {
-                    var node = new Node();
-                    SetHead(node);
-
-                    return node;
+                    return null;
                 }
 
-                while (lastNode.Next != null)
+                while (currentNode.Next != null)
                 {
-                    lastNode = lastNode.Next;
+                    currentNode = currentNode.Next;
                 }
 
-                return lastNode;
+                return currentNode;
             }
 
             //AddAfter
-            /// <summary>
-            /// LinkedList에서 Node 중 입력한 값을 갖고 있는 노드를 찾은 후 해당 노드의 다음 노드가 있을 시 
-            /// 연결을 해제하고 새로운 노드를 추가한 뒤 연결 해제한 노드를 재연결한다.
-            /// </summary>
-            /// <param name="value">찾을 값</param>
-            /// <param name="newValue">새로 추가할 값</param>
             public void AddAfter(int value, int newValue)
             {
-                var head = GetHead();
+                var currentNode = _head;
                 var newNode = new Node(newValue);
 
-                while (head.Data != value)
+                while (currentNode.Data != value)
                 {
-                    head = head.Next;
+                    currentNode = currentNode.Next;
                 }
 
-                if (head.Next == null)
+                if (currentNode.Next == null)
                 {
-                    head.Next = newNode;
+                    currentNode.Next = newNode;
                 }
                 else
                 {
-                    var nextNode = head.Next;
+                    var nextNode = currentNode.Next;
                     newNode.Next = nextNode;
-                    head.Next = newNode;
+                    currentNode.Next = newNode;
                 }
             }
 
             //AddBefore
-            /// <summary>
-            /// LinkedList의 Node 중 입력한 값을 갖고 있는 노드를 찾은 후 이전 노드와의 연결을 해제 후
-            /// 새로운 Node를 이전 노드와 연결하고 새로운 Node에 기존 노드를 연결한다.
-            /// </summary>
-            /// <param name="value">찾을 값</param>
-            /// <param name="newValue">새로 추가할 값</param>
             public void AddBefore(int value, int newValue)
             {
-                var head = GetHead();
+                var currentNode = _head;
                 var newNode = new Node(newValue);
-                Node beforeNode = new Node();
+                Node beforeNode = null;
 
-                while (head.Data != value)
+                if (currentNode == null)
                 {
-                    beforeNode = head;
-                    head = head.Next;
+                    _head = newNode;
+
+                }
+
+                while (currentNode.Data != value)
+                {
+                    beforeNode = currentNode;
+                    currentNode = currentNode.Next;
                 }
 
                 beforeNode.Next = newNode;
-                newNode.Next = head;
+                newNode.Next = currentNode;
             }
 
             //AddLast
-            /// <summary>
-            /// LinkedList의 마지막 노드에 새로운 Node를 추가한다.
-            /// </summary>
-            /// <param name="newValue">새로 추가할 값</param>
             public void AddLast(int newValue)
             {
                 var newNode = new Node(newValue);
 
-                var lastNode = FindLast();
+                var currentNode = FindLast();
 
-                if (lastNode.Data == 0)
+                if (currentNode == null)
                 {
-                    lastNode.Data = newValue;
+                    currentNode = newNode;
                 }
-                else
+
+                while (currentNode.Next != null)
                 {
-                    lastNode.Next = newNode;
+                    currentNode = currentNode.Next;
                 }
+
+                currentNode.Next = newNode;
             }
 
             //Clear
             public void Clear()
             {
-
+                _head = null;
             }
 
             //Contains --> bool 
             public bool Contains(int value)
             {
+                var currentNode = FindLast();
+
+                if (currentNode == null)
+                {
+                    return false;
+                }
+
+                while (currentNode.Data != value)
+                {
+                    currentNode = currentNode.Next;
+
+                    return true;
+                }
+
                 return true;
             }
 
             //CopyTo
-            public Node CopyTo(Node sourceNode, Node targetNode)
+            public void CopyTo(int[] targetArray, int index)
             {
-                return new Node();
+                if (targetArray == null)
+                {
+                    throw new ArgumentNullException();
+                }
+
+                if (index < 0 || index > targetArray.Length)
+                {
+                    throw new ArgumentException();
+                }
+
+                if (targetArray.Length - index < Count)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                var currentNode = _head;
+
+                if (currentNode == null)
+                {
+                    return;
+                }
+
+                int _index = 0;
+
+                while (currentNode.Next != null)
+                {
+                    targetArray[_index++] = currentNode.Data;
+                    currentNode = currentNode.Next;
+                }
             }
 
             //FindIndex
             public int FindIndex(int value)
             {
-                return 0;
+                int count = 0;
+
+                var currentNode = _head;
+
+                while (currentNode.Data != value)
+                {
+                    count++;
+                    currentNode = currentNode.Next;
+                }
+
+                if (count == 0)
+                {
+                    Console.WriteLine("Value not found");
+                }
+
+                return count;
             }
 
             //Remove
             public void Remove(int value)
             {
+                var currentNode = _head;
+                Node beforeNode = null;
 
+                if (currentNode != null && currentNode.Data == value)
+                {
+                    _head = currentNode.Next;
+                }
+
+                while (currentNode.Data != value)
+                {
+                    beforeNode = currentNode;
+                    currentNode = currentNode.Next;
+                }
+
+                if (currentNode.Next != null)
+                {
+                    beforeNode = currentNode.Next;
+                }
             }
 
             //RemoveFirst
             public void RemoveFirst()
             {
-
+                _head = _head.Next;
             }
 
             //RemoveLast
             public void RemoveLast()
             {
+                var lastNode = FindLast();
 
+                if (lastNode == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (lastNode.Next == null)
+                {
+                    _head = null;
+                }
+                else
+                {
+                    InternalRemoveNode(lastNode);
+                }
+            }
+
+            private void InternalRemoveNode(Node node)
+            {
+                var currentNode = _head;
+
+                while (currentNode.Next.Data != node.Data)
+                {
+                    currentNode = currentNode.Next;
+                }
+
+                currentNode.Next = null;
+                _count--;
             }
         }
     }
-
-
-    //public class Chapter3LinkeList
-    //{
-    //    public class Node
-    //    {
-    //        public int data { get; set; }
-
-    //        public Node next { get; set; }
-
-    //        public Node(int data)
-    //        {
-    //            this.data = data;
-    //            next = null;
-    //        }
-    //    }
-
-    //    public class LinkedList
-    //    {
-    //        public Node head;
-    //        public Node GetLastNode()
-    //        {
-    //            Node lastNode = head;
-    //            while (lastNode.next != null)
-    //            {
-    //                lastNode = lastNode.next;
-    //            }
-
-    //            return lastNode;
-    //        }
-
-    //        public void InsertFront(int data)
-    //        {
-    //            Node node = new Node(data);
-    //            node.next = head;
-    //            head = node;
-    //        }
-
-    //        public void InsertLast(int data)
-    //        {
-    //            Node node = new Node(data);
-
-    //            if (head == null)
-    //            {
-    //                head = node;
-    //                return;
-    //            }
-
-    //            Node lastNode = GetLastNode();
-    //            lastNode.next = node;
-    //        }
-
-    //        //pre 뒤에 data 넣기
-    //        public void InsertAfter(int previous, int data)
-    //        {
-    //            Node preNode = null;
-
-    //            for (Node temp = head; temp != null; temp = temp.next)
-    //            {
-    //                if (previous == temp.data)
-    //                {
-    //                    preNode = temp;
-    //                }
-    //            }
-
-    //            if (preNode == null)
-    //            {
-    //                Console.WriteLine($"{previous}는 존재하지 않음");
-    //                return;
-    //            }
-
-    //            Node node = new Node(data);
-    //            node.next = preNode.next;
-    //            preNode.next = node;
-    //        }
-
-    //        public void DeleteNode(int key)
-    //        {
-    //            Node temp = head;
-    //            Node previousNode = null;
-
-    //            if (temp != null && temp.data == key)
-    //            {
-    //                head = temp.next;
-    //                return;
-    //            }
-
-    //            while (temp != null && temp.data != key)
-    //            {
-    //                previousNode = temp;
-    //                temp = temp.next;
-    //            }
-    //            if (temp == null)
-    //            {
-    //                return;
-    //            }
-
-    //            previousNode.next = temp.next;
-    //        }
-
-    //        public void Reverse()
-    //        {
-    //            Node previousNode = null;
-    //            Node currentNode = head;
-    //            Node temp = null;
-
-    //            while (currentNode != null)
-    //            {
-    //                temp = currentNode;
-    //                currentNode.next = previousNode;
-    //                previousNode = currentNode;
-    //                currentNode = temp;
-    //            }
-    //        }
-
-    //        public void Print()
-    //        {
-
-    //        }
-    //    }
-    //}
 }
