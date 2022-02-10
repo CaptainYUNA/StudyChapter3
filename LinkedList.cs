@@ -9,7 +9,7 @@ namespace StudyChapter3
         public class Node
         {
             public int Data { get; set; }
-            public Node Next { get; set; }
+            public Node Next { get; internal set; }
             public Node(int data)
             {
                 Data = data;
@@ -20,6 +20,7 @@ namespace StudyChapter3
         public class LinkedList
         {
             private Node _head;
+            public Node Head => _head;
 
             private int _count;
 
@@ -28,14 +29,21 @@ namespace StudyChapter3
                 get
                 {
                     return _count;
-                }
-                set
+                }   
+            }
+
+            internal void Print()
+            {
+                var current = _head;
+
+                while (current != null)
                 {
-                    while (_head.Next != null)
-                    {
-                        _count++;
-                    }
+                    Console.Write(current.Data);
+                    Console.Write(", ");
+                    current = current.Next;
                 }
+
+                Console.WriteLine();
             }
 
             //FindLast
@@ -58,7 +66,8 @@ namespace StudyChapter3
 
             //AddAfter
             public void AddAfter(int value, int newValue)
-            {
+            { 
+
                 var currentNode = _head;
                 var newNode = new Node(newValue);
 
@@ -105,19 +114,15 @@ namespace StudyChapter3
             //AddLast
             public void AddLast(int newValue)
             {
+
                 var newNode = new Node(newValue);
+                if (_head == null)
+                {
+                    _head = newNode;
+                    return;
+                }
 
                 var currentNode = FindLast();
-
-                if (currentNode == null)
-                {
-                    currentNode = newNode;
-                }
-
-                while (currentNode.Next != null)
-                {
-                    currentNode = currentNode.Next;
-                }
 
                 currentNode.Next = newNode;
             }
