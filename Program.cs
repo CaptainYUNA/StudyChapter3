@@ -50,14 +50,11 @@ namespace StudyChapter3
             //int[] array = new int[30];
 
             var linkedList = new LinkedList();
-            var random = new Random();
-
-            Clear(linkedList);
 
             Initialize(linkedList);
             Check(linkedList, 1, 2, 3, 4);
 
-            // 0개일때, 1개일때, 2개 이상일때,  같은 값이 있을때, 값이 없을때
+            // 0개일 때, 1개일 때, 2개 이상일 때, 같은 값이 있을 때, 값이 없을 때
 
             Clear(linkedList);
             linkedList.AddLast(99);
@@ -73,12 +70,16 @@ namespace StudyChapter3
 
 
             Clear(linkedList);
+
             try
             {
                 linkedList.AddAfter(99, 100);
                 Error();
             }
-            catch (InvalidOperationException) { }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("List is empty.");
+            }
 
             linkedList.AddLast(99);
             linkedList.AddAfter(99, 100);
@@ -87,7 +88,15 @@ namespace StudyChapter3
             linkedList.AddAfter(99, 101);
             Check(linkedList, 99, 101, 100);
 
-            linkedList.AddAfter(100, 102);
+            try
+            {
+                linkedList.AddAfter(100, 102);
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("Value not found.");
+            }
+
             Check(linkedList, 99, 101, 100, 102);
 
             Clear(linkedList);
@@ -104,16 +113,7 @@ namespace StudyChapter3
             linkedList.AddBefore(99, 2);
             linkedList.Print();
 
-
-
             Clear(linkedList);
-
-
-            for (int i = 0; i < 5; i++)
-            {
-                linkedList.AddLast(random.Next(100));
-            }
-
             linkedList.Print();
 
             linkedList.AddLast(99);
@@ -135,9 +135,9 @@ namespace StudyChapter3
             Debugger.Break();
         }
 
-        private static void Initialize(LinkedList linkedList)
+        private static void Initialize(LinkedList list)
         {
-            Initiaze(linkedList, 1, 2, 3, 4);
+            Initiaze(list, 1, 2, 3, 4);
         }
 
         private static void Check(LinkedList list, params int[] values)
@@ -147,17 +147,19 @@ namespace StudyChapter3
             var current = list.Head;
 
             var count = 0;
-            Console.Write($"Test: ");
+            Console.Write($"Method Test: ");
+
             while (current != null)
             {
                 count++;
                 Console.Write(current.Data);
                 if (current.Next != null)
                 {
-                    Console.Write(",");
+                    Console.Write(", ");
                 }
                 current = current.Next;
             }
+
             Console.WriteLine();
 
             if (count != values.Length)
@@ -201,6 +203,7 @@ namespace StudyChapter3
         private static void Clear(LinkedList list)
         {
             list.Clear();
+            list.Count = 0;
         }
 
 
