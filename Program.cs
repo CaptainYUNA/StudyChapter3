@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using static StudyChapter3.YUNALinkedList;
+using static StudyChapter3.YUNAList;
 
 namespace StudyChapter3
 {
@@ -9,6 +10,7 @@ namespace StudyChapter3
     {
         static void Main(string[] args)
         {
+            //LinkedList
             var linkedList = new LinkedList();
 
             Initialize(linkedList);
@@ -103,6 +105,71 @@ namespace StudyChapter3
             if (!linkedList.Remove(10))
             {
                 Console.WriteLine("Value not found.");
+            }
+
+            //List
+            var list = new List();
+            list.Add(3.3);
+            list.Add(5.5);
+            list.Add(7.7);
+            list.Add(9.9);
+            list.Add(11.1);
+            list.Print();
+            Console.WriteLine();
+
+            list.Add(17.7);
+            list.Add(19.9);
+            list.Add(21.1);
+            list.Print();
+            var count = list.Count;
+            Console.WriteLine();
+            Console.WriteLine($"List Length: {count}");
+
+            var index = list.IndexOf(17.7);
+            Console.WriteLine($"Expected index = 5 / IndexOf: {index}");
+            index = list.IndexOf(99);
+            Console.WriteLine($"Expected index = -1 / IndexOf: {index}");
+            list.RemoveAt(4);
+            list.Print();
+            Console.WriteLine();
+
+            try
+            {
+                list.RemoveAt(77);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("Out of range");
+            }
+
+            list.Print();
+            Console.WriteLine();
+            list.Reverse(); //TODO
+            list.Print();
+            Console.WriteLine();
+
+            list.Insert(4, 12.3);
+            list.Print();
+            Console.WriteLine();
+
+            try
+            {
+                list.Insert(77, 54.2);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("Out of range");
+            }
+
+            var array = list.ToArray();
+
+            if (array.Length == list.Count)
+            {
+                Console.WriteLine("O");
+            }
+            else
+            {
+                Console.WriteLine("X");
             }
         }
 
