@@ -84,21 +84,33 @@ namespace StudyChapter3
             linkedList.Print();
             linkedList.AddAfter(99, 3);
             linkedList.Print();
+            //TODO
             linkedList.AddBefore(99, 2);
             linkedList.Print();
 
             linkedList.RemoveFirst();
             linkedList.Print();
-            linkedList.RemoveLast();
+            try
+            {
+                linkedList.RemoveLast();
+            }
+            catch (ArgumentException)
+            {
+            }
+
             linkedList.Print();
 
             linkedList.Clear();
             linkedList.AddLast(2);
+            linkedList.Print();
             linkedList.AddLast(99);
+            linkedList.Print();
             linkedList.AddAfter(2, 7);
-            linkedList.AddBefore(99, 11);
+            linkedList.Print();
             //TODO: AddBefore 중간 값을 찾아서 넣는 것 다시
-            linkedList.AddBefore(11, 88);
+            linkedList.AddBefore(99, 11);
+            linkedList.Print();
+            linkedList.AddBefore(99, 33);
             linkedList.Print();
 
             linkedList.Remove(11);

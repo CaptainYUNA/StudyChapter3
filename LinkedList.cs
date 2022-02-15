@@ -59,11 +59,6 @@ namespace StudyChapter3
                     return null;
                 }
 
-                if (currentNode.Next == null)
-                {
-                    return currentNode;
-                }
-
                 while (currentNode.Next != null)
                 {
                     currentNode = currentNode.Next;
@@ -77,79 +72,37 @@ namespace StudyChapter3
             {
                 var currentNode = _head;
                 var newNode = new Node(newValue);
-                Node nextNode = null;
 
                 if (currentNode == null)
                 {
                     throw new ArgumentNullException();
                 }
 
-                if (currentNode.Data == value)
+                while (currentNode.Data != value)
                 {
-                    if (currentNode.Next == null)
+                    if (currentNode.Data == value)
                     {
-                        currentNode.Next = newNode;
-                        _count++;
+                        if (currentNode.Next == null)
+                        {
+                            currentNode.Next = newNode;
+                            _count++;
 
-                        return;
+                            return;
+                        }
+
                     }
                     else
                     {
-                        nextNode = currentNode.Next;
-                        currentNode.Next = newNode;
-                        newNode.Next = nextNode;
-
-                        _count++;
-
-                        return;
+                        currentNode = currentNode.Next;
                     }
                 }
-                else
-                {
-                    while (currentNode.Data != value)
-                    {
-                        if (currentNode.Data == value)
-                        {
-                            if (currentNode.Next == null)
-                            {
-                                currentNode.Next = newNode;
-                                _count++;
 
-                                return;
-                            }
-                            else
-                            {
-                                nextNode = currentNode.Next;
-                                newNode.Next = nextNode;
-                                currentNode.Next = newNode;
+                var nextNode = currentNode.Next;
+                newNode.Next = nextNode;
+                currentNode.Next = newNode;
+                _count++;
 
-                                _count++;
-                            }
-                        }
-                        else
-                        {
-                            currentNode = currentNode.Next;
-                        }
-                    }
-
-                    if (currentNode.Next == null)
-                    {
-                        currentNode.Next = newNode;
-                        _count++;
-
-                        return;
-                    }
-                    else
-                    {
-                        nextNode = currentNode.Next;
-                        newNode.Next = nextNode;
-                        currentNode.Next = newNode;
-                        _count++;
-
-                        return;
-                    }
-
-                }
+                return;
             }
 
             //AddBefore
@@ -164,30 +117,43 @@ namespace StudyChapter3
                     throw new ArgumentNullException();
                 }
 
-                if (currentNode.Data == value)
-                {
-                    beforeNode = currentNode;
-                    _head = newNode;
-                    _head.Next = beforeNode;
-
-                    _count++;
-
-                    return;
-                }
-
                 while (currentNode.Data != value)
                 {
                     beforeNode = currentNode;
                     currentNode = currentNode.Next;
 
-                    if (currentNode.Next == null)
+                    if (currentNode.Data == value)
                     {
-                        beforeNode.Next = newNode;
-                        newNode.Next = currentNode;
-                        _count++;
+                        if (currentNode.Next == null)
+                        {
+                            currentNode.Next = newNode;
+                            _count++;
+
+                            return;
+                        }
+                        else
+                        {
+                            beforeNode.Next = newNode;
+                            newNode.Next = currentNode;
+                            _count++;
+
+                            return;
+                        }
                     }
                 }
+
+                if (beforeNode == null)
+                {
+                    beforeNode = currentNode;
+                    _head = newNode;
+                    newNode.Next = beforeNode;
+
+                    _count++;
+                }
+
+                return;
             }
+
 
             //AddLast
             public void AddLast(int newValue)
@@ -219,27 +185,19 @@ namespace StudyChapter3
             {
                 var currentNode = _head;
 
-                if (currentNode == null)
+                while (currentNode.Next != null)
                 {
-                    return false;
-                }
-
-                if (currentNode.Data != value && currentNode.Next == null)
-                {
-                    return false;
-                }
-
-                while (currentNode.Data != value)
-                {
-                    currentNode = currentNode.Next;
-
-                    if (currentNode.Next == null)
+                    if (currentNode.Data == value)
                     {
-                        return false;
+                        return true;
+                    }
+                    else
+                    {
+                        currentNode = currentNode.Next;
                     }
                 }
 
-                return true;
+                return false;
             }
 
             //CopyTo
@@ -379,6 +337,7 @@ namespace StudyChapter3
             public void RemoveFirst()
             {
                 _head = _head.Next;
+                _count--;
             }
 
             //TODO
@@ -386,20 +345,24 @@ namespace StudyChapter3
             public void RemoveLast()
             {
                 var currentNode = _head;
-                Node beforNode = null;
-
-                if (currentNode == null)
-                {
-                    throw new InvalidOperationException();
-                }
+                Node beforeNode = null;
 
                 while (currentNode.Next != null)
                 {
-                    beforNode = currentNode;
+                    beforeNode = currentNode;
                     currentNode = currentNode.Next;
+                    _count--;
                 }
 
-                beforNode.Next = null;
+                if (beforeNode == null)
+                {
+                    _head = null;
+                    _count--;
+
+                    return;
+                }
+
+                beforeNode.Next = null;
                 _count--;
             }
         }
