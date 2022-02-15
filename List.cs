@@ -12,7 +12,7 @@ namespace StudyChapter3
             private double[] _array;
             private int _count;
 
-            const int DEFAULT_SIZE = 3;
+            const int DEFAULT_SIZE = 8;
 
             public double this[int index]
             {
@@ -103,7 +103,7 @@ namespace StudyChapter3
             //RemoveAt: index + 1에 있는 값 당기기
             public void RemoveAt(int index)
             {
-                if (index < 0 || index > Count)
+                if (index < 0 || index >= Count)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -119,7 +119,7 @@ namespace StudyChapter3
             //Insert
             public void Insert(int index, double value)
             {
-                if (index < 0 || index > Count)
+                if (index < 0 || index >= Count)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -146,36 +146,9 @@ namespace StudyChapter3
                 Array.Copy(tempArray, 0, _array, 0, tempArray.Length);
             }
 
-            //AddRange
-            public void AddRange(int startIndex, int endIndex, double[] values)
-            {
-                if (values == null)
-                {
-                    throw new ArgumentNullException();
-                }
-
-                if (startIndex < 0)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-
-                if (endIndex > Count)
-                {
-                    ExpandCapacity();
-                }
-
-                //TODO
-
-            }
-
             //Clear: 전부 삭제
             public void Clear()
             {
-                while (Count < 0)
-                {
-                    RemoveAt(Count - 1);
-                }
-
                 _count = 0;
             }
 
@@ -184,22 +157,30 @@ namespace StudyChapter3
             {
                 var newArray = new double[Count];
 
-                for (int i = 0; i < Count; i++)
-                {
-                    newArray[i] = _array[i];
-                }
+                Array.Copy(_array, 0, newArray, 0, _array.Length);
 
                 return newArray;
             }
 
-            //TODO
-            //Reverse
-            public List Reverse()
+            public void Reverse()
             {
-                var newList = new List(Count);
+                Reverse(0, Count);
+            }
 
+            //Reverse
+            public void Reverse(int index, int count)
+            {
+                if (index < 0 || count < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
 
-                return newList;
+                if (Count - index < Count)
+                {
+                    throw new ArgumentException();
+                }
+
+                Array.Reverse(_array, index, count);
             }
         }
     }

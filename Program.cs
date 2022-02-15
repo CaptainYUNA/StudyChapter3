@@ -97,6 +97,8 @@ namespace StudyChapter3
             linkedList.AddLast(99);
             linkedList.AddAfter(2, 7);
             linkedList.AddBefore(99, 11);
+            //TODO: AddBefore 중간 값을 찾아서 넣는 것 다시
+            linkedList.AddBefore(11, 88);
             linkedList.Print();
 
             linkedList.Remove(11);
@@ -144,7 +146,7 @@ namespace StudyChapter3
 
             list.Print();
             Console.WriteLine();
-            list.Reverse(); //TODO
+            list.Reverse();
             list.Print();
             Console.WriteLine();
 
