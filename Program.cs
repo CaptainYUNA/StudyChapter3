@@ -38,9 +38,9 @@ namespace StudyChapter3
                 linkedList.AddAfter(99, 100);
                 Error();
             }
-            catch (ArgumentNullException)
+            catch (ArgumentException)
             {
-                Console.WriteLine("List is empty.");
+                Console.WriteLine("Value not found.");
             }
 
             linkedList.AddLast(99);
@@ -50,15 +50,7 @@ namespace StudyChapter3
             linkedList.AddAfter(99, 101);
             Check(linkedList, 99, 101, 100);
 
-            try
-            {
-                linkedList.AddAfter(100, 102);
-            }
-            catch (InvalidOperationException)
-            {
-                Console.WriteLine("Value not found.");
-            }
-
+            linkedList.AddAfter(100, 102);
             Check(linkedList, 99, 101, 100, 102);
 
             Clear(linkedList);
@@ -73,53 +65,61 @@ namespace StudyChapter3
             CheckIndex(linkedList.FindIndex(98), 1);
 
             linkedList.AddAfter(99, 3);
-            linkedList.Print();
+            Check(linkedList, 99, 3, 98);
             linkedList.AddBefore(99, 2);
-            linkedList.Print();
+            Check(linkedList, 2, 99, 3, 98);
 
             Clear(linkedList);
             linkedList.Print();
 
             linkedList.AddLast(99);
-            linkedList.Print();
             linkedList.AddAfter(99, 3);
-            linkedList.Print();
+            Check(linkedList, 99, 3);
             //TODO
             linkedList.AddBefore(99, 2);
-            linkedList.Print();
+            Check(linkedList, 2, 99, 3);
 
             linkedList.RemoveFirst();
-            linkedList.Print();
+            Check(linkedList, 99, 3);
+
+            linkedList.RemoveLast();
+            Check(linkedList, 99);
+            linkedList.RemoveLast();
+
             try
             {
                 linkedList.RemoveLast();
             }
-            catch (ArgumentException)
+            catch (InvalidOperationException)
             {
+                Console.WriteLine("List is empty.");
             }
-
-            linkedList.Print();
 
             linkedList.Clear();
             linkedList.AddLast(2);
-            linkedList.Print();
             linkedList.AddLast(99);
-            linkedList.Print();
             linkedList.AddAfter(2, 7);
-            linkedList.Print();
-            //TODO: AddBefore 중간 값을 찾아서 넣는 것 다시
+            Check(linkedList, 2, 7, 99);
+            //마지막에 있는 값 찾아서 넣기
             linkedList.AddBefore(99, 11);
-            linkedList.Print();
-            linkedList.AddBefore(99, 33);
-            linkedList.Print();
+            Check(linkedList, 2, 7, 11, 99);
+
+            //중간 값
+            linkedList.AddBefore(11, 33);
+            Check(linkedList, 2, 7, 33, 11, 99);
 
             linkedList.Remove(11);
-            linkedList.Print();
+            Check(linkedList, 2, 7, 33, 99);
 
-            if (!linkedList.Remove(10))
+            if (linkedList.Remove(10))
             {
+                Error();
                 Console.WriteLine("Value not found.");
             }
+
+            var targetArray = new int[linkedList.Count];
+            linkedList.CopyTo(targetArray, 0);
+            Check(linkedList, 2, 7, 33, 99);
 
             //List
             var list = new List();
@@ -191,6 +191,7 @@ namespace StudyChapter3
         {
             if (v1 == v2)
             {
+                Console.WriteLine("Is same.");
                 return true;
             }
             else

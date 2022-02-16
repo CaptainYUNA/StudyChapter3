@@ -141,7 +141,8 @@ namespace StudyChapter3
             private void ExpandCapacity()
             {
                 var tempArray = _array;
-                _array = new double[Capacity * 2];
+
+                _array = new double[(Capacity == 0 ? 1 : Capacity * 2)];
 
                 Array.Copy(tempArray, 0, _array, 0, tempArray.Length);
             }

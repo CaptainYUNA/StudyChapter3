@@ -39,6 +39,11 @@ namespace StudyChapter3
             {
                 var current = _head;
 
+                if (Count == 0)
+                {
+                    Console.WriteLine("List is empty.");
+                }
+
                 while (current != null)
                 {
                     Console.Write(current.Data);
@@ -78,18 +83,17 @@ namespace StudyChapter3
                     throw new ArgumentNullException();
                 }
 
-                while (currentNode.Data != value)
+                while (currentNode.Next != null)
                 {
                     if (currentNode.Data == value)
                     {
-                        if (currentNode.Next == null)
-                        {
-                            currentNode.Next = newNode;
-                            _count++;
+                        var nextNode = currentNode.Next;
+                        currentNode.Next = newNode;
+                        newNode.Next = nextNode;
 
-                            return;
-                        }
+                        _count++;
 
+                        return;
                     }
                     else
                     {
@@ -97,70 +101,77 @@ namespace StudyChapter3
                     }
                 }
 
-                var nextNode = currentNode.Next;
-                newNode.Next = nextNode;
-                currentNode.Next = newNode;
-                _count++;
+                if (currentNode.Data == value)
+                {
+                    currentNode.Next = newNode;
+                    _count++;
 
-                return;
+                    return;
+                }
+
+                throw new ArgumentException();
             }
 
             //AddBefore
             public void AddBefore(int value, int newValue)
             {
                 var currentNode = _head;
-                var newNode = new Node(newValue);
                 Node beforeNode = null;
+                var newNode = new Node(newValue);
 
                 if (currentNode == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentException();
                 }
 
-                while (currentNode.Data != value)
+                if (currentNode.Data == value)
                 {
-                    beforeNode = currentNode;
-                    currentNode = currentNode.Next;
+                    var nextNode = currentNode;
+                    _head = newNode;
+                    newNode.Next = nextNode;
 
+                    _count++;
+
+                    return;
+                }
+
+                while (currentNode.Next != null)
+                {
                     if (currentNode.Data == value)
                     {
-                        if (currentNode.Next == null)
-                        {
-                            currentNode.Next = newNode;
-                            _count++;
+                        beforeNode.Next = newNode;
+                        newNode.Next = currentNode;
+                        _count++;
 
-                            return;
-                        }
-                        else
-                        {
-                            beforeNode.Next = newNode;
-                            newNode.Next = currentNode;
-                            _count++;
-
-                            return;
-                        }
+                        return;
+                    }
+                    else
+                    {
+                        beforeNode = currentNode;
+                        currentNode = currentNode.Next;
                     }
                 }
 
                 if (beforeNode == null)
                 {
-                    beforeNode = currentNode;
-                    _head = newNode;
-                    newNode.Next = beforeNode;
-
-                    _count++;
+                    throw new InvalidOperationException();
                 }
 
-                return;
-            }
+                beforeNode.Next = newNode;
+                newNode.Next = currentNode;
+                _count++;
 
+                return;
+
+            }
 
             //AddLast
             public void AddLast(int newValue)
             {
+                var currentNode = _head;
                 var newNode = new Node(newValue);
 
-                if (_head == null)
+                if (currentNode == null)
                 {
                     _head = newNode;
                     _count++;
@@ -168,9 +179,9 @@ namespace StudyChapter3
                     return;
                 }
 
-                var currentNode = FindLast();
+                var lastNode = FindLast();
 
-                currentNode.Next = newNode;
+                lastNode.Next = newNode;
                 _count++;
             }
 
@@ -184,6 +195,11 @@ namespace StudyChapter3
             public bool Contains(int value)
             {
                 var currentNode = _head;
+
+                if (currentNode == null)
+                {
+                    throw new ArgumentNullException();
+                }
 
                 while (currentNode.Next != null)
                 {
@@ -203,55 +219,51 @@ namespace StudyChapter3
             //CopyTo
             public void CopyTo(int[] targetArray, int index)
             {
-                if (targetArray == null)
-                {
-                    throw new ArgumentNullException();
-                }
-
-                if (index < 0)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-
-                if (targetArray.Length < _count)
-                {
-                    throw new ArgumentException();
-                }
-
                 var currentNode = _head;
 
                 if (currentNode == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentException();
                 }
-
-                int _index = 0;
 
                 if (currentNode.Next == null)
                 {
-                    targetArray[_index] = currentNode.Data;
+                    targetArray[index] = currentNode.Data;
 
                     return;
                 }
 
                 while (currentNode.Next != null)
                 {
-                    targetArray[_index++] = currentNode.Data;
+                    targetArray[index++] = currentNode.Data;
                     currentNode = currentNode.Next;
                 }
+
             }
 
             //TODO
             //FindIndex
             public int FindIndex(int value)
             {
-                int count = 0;
-
                 var currentNode = _head;
+                var count = 0;
 
                 if (currentNode == null)
                 {
-                    return -1;
+                    throw new ArgumentException();
+                }
+
+                while (currentNode.Next != null)
+                {
+                    if (currentNode.Data == value)
+                    {
+                        return count;
+                    }
+                    else
+                    {
+                        count++;
+                        currentNode = currentNode.Next;
+                    }
                 }
 
                 if (currentNode.Data == value)
@@ -259,21 +271,7 @@ namespace StudyChapter3
                     return count;
                 }
 
-                while (currentNode.Data != value)
-                {
-                    count++;
-
-                    if (currentNode.Next == null)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        currentNode = currentNode.Next;
-                    }
-                }
-
-                return count;
+                return -1;
             }
 
             //TODO
@@ -281,11 +279,11 @@ namespace StudyChapter3
             public bool Remove(int value)
             {
                 var currentNode = _head;
-                Node newNode = null;
+                Node beforeNode = null;
 
                 if (currentNode == null)
                 {
-                    return false;
+                    throw new InvalidOperationException();
                 }
 
                 if (currentNode.Data == value)
@@ -294,42 +292,26 @@ namespace StudyChapter3
                     {
                         _head = null;
                         _count--;
-
-                        return true;
                     }
-                    else
+                }
+
+                while (currentNode.Next != null)
+                {
+                    if (currentNode.Data == value)
                     {
-                        _head = currentNode.Next;
+                        beforeNode.Next = currentNode.Next;
                         _count--;
 
                         return true;
                     }
-                }
-
-                while (currentNode.Data != value)
-                {
-                    if (newNode == null)
-                    {
-                        newNode = new Node(currentNode.Data);
-                    }
                     else
                     {
-                        newNode.Next = new Node(currentNode.Data);
+                        beforeNode = currentNode;
+                        currentNode = currentNode.Next;
                     }
-
-                    if (currentNode.Next == null)
-                    {
-                        return false;
-                    }
-
-                    currentNode = currentNode.Next;
                 }
 
-                _head = newNode;
-                currentNode = currentNode.Next;
-                AddLast(currentNode.Data);
-
-                return true;
+                return false;
             }
 
             //TODO
@@ -347,23 +329,27 @@ namespace StudyChapter3
                 var currentNode = _head;
                 Node beforeNode = null;
 
+                if (currentNode == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 while (currentNode.Next != null)
                 {
                     beforeNode = currentNode;
                     currentNode = currentNode.Next;
-                    _count--;
                 }
 
                 if (beforeNode == null)
                 {
                     _head = null;
                     _count--;
-
-                    return;
                 }
-
-                beforeNode.Next = null;
-                _count--;
+                else
+                {
+                    beforeNode.Next = null;
+                    _count--;
+                }
             }
         }
     }
