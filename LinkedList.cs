@@ -148,7 +148,8 @@ namespace StudyChapter3.Collection
             if (lastNode == null)
             {
                 _head = newNode;
-                //여기서 바로 return하지 말고, else 조건을 두고 _count++는 if와 else 중 하나만 타도 증가하는 것이니 두 번 쓸 필요가 없어짐
+                /* 여기서 바로 return하지 말고, else 조건을 두고
+                _count++는 if와 else 중 하나만 타도 증가하는 것이니 두 번 쓸 필요가 없어짐 */
             }
             else
             {
@@ -165,7 +166,8 @@ namespace StudyChapter3.Collection
             _count = 0;
         }
 
-        //Contains --> bool 
+        //Contains --> bool
+        //참조 0개인 것 놓치지 말기. 검증 필수!
         public bool Contains(int value)
         {
             var currentNode = _head;
@@ -186,9 +188,22 @@ namespace StudyChapter3.Collection
         //CopyTo
         public void CopyTo(int[] targetArray, int index)
         {
+            if (targetArray == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else if (index < 0 || Count < index || index + Count < targetArray.Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
             var currentNode = _head;
 
-            
+            while (currentNode != null)
+            {
+                targetArray[index++] = currentNode.Data;
+                currentNode = currentNode.Next;
+            }
         }
 
         //FindIndex
@@ -197,9 +212,17 @@ namespace StudyChapter3.Collection
             var currentNode = _head;
             var count = 0;
 
+            while (currentNode != null)
+            {
+                if (currentNode.Data == value)
+                {
+                    return count;
+                }
 
+                currentNode = currentNode.Next;
+                count++;
+            }
 
-            
             return -1;
         }
 
@@ -220,9 +243,28 @@ namespace StudyChapter3.Collection
                 currentNode = currentNode.Next;
             }
 
-            
+            if (currentNode == null)
+            {
+                return false;
+            }
 
-            return false;
+            if (beforeNode == null)
+            {
+                _head = currentNode.Next;
+            }
+            else
+            {
+                beforeNode.Next = currentNode.Next;
+            }
+
+            if (currentNode.Next == null)
+            {
+                _head = null;
+            }
+
+            _count--;
+
+            return true;
         }
 
         //RemoveFirst

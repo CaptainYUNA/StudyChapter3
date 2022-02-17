@@ -68,13 +68,23 @@ namespace StudyChapter3
             linkedList.AddBefore(99, 2);
             Check(linkedList, 2, 99, 3, 98);
 
+            if (linkedList.Contains(33) == false)
+            {
+                Console.WriteLine("Value not contains.");
+            }
+
+            if (linkedList.Contains(3))
+            {
+                var findIndex = linkedList.FindIndex(3);
+                Console.WriteLine($"Value index: {findIndex}");
+            }
+
             Clear(linkedList);
             linkedList.Print();
 
             linkedList.AddLast(99);
             linkedList.AddAfter(99, 3);
             Check(linkedList, 99, 3);
-            //TODO
             linkedList.AddBefore(99, 2);
             Check(linkedList, 2, 99, 3);
 
