@@ -2,47 +2,45 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StudyChapter3
+namespace StudyChapter3.Collection
 {
-    public class Chapter3Stack
+
+    public class MyStack<T>
     {
-        public class MyStack<T>
+        const int size = 10;
+
+        public T[] array = new T[size];
+
+        public int top;
+
+        public MyStack()
         {
-            const int size = 10;
+            top = 0;
+        }
 
-            public T[] array = new T[size];
-
-            public int top;
-
-            public MyStack()
+        public void Push(T value)
+        {
+            if (top < size)
             {
-                top = 0;
+                array[top] = value;
+                ++top;
             }
-
-            public void Push(T value)
+            else
             {
-                if (top < size)
-                {
-                    array[top] = value;
-                    ++top;
-                }
-                else
-                {
-                    Console.WriteLine("Stack Full");
-                }
+                Console.WriteLine("Stack Full");
             }
+        }
 
-            public T Pop()
+        public T Pop()
+        {
+            if (top > 0)
             {
-                if (top > 0)
-                {
-                    --top;
-                    return array[top];
-                }
-                else
-                {
-                    return default(T);
-                }
+                --top;
+                return array[top];
+            }
+            else
+            {
+                return default(T);
             }
         }
     }

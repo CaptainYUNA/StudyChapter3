@@ -1,8 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using StudyChapter3.Collection;
 
-using static StudyChapter3.YUNALinkedList;
-using static StudyChapter3.YUNAList;
+using System;
+using System.Diagnostics;
 
 namespace StudyChapter3
 {
@@ -281,7 +280,6 @@ namespace StudyChapter3
         private static void Clear(LinkedList list)
         {
             list.Clear();
-            list.Count = 0;
         }
 
 
