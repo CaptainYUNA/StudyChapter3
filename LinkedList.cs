@@ -291,6 +291,7 @@ namespace StudyChapter3.Collection
                 currentNode = currentNode.Next;
             }
 
+            //_count를 어디서 감소하느냐는 취향 차이
             if (beforeNode == null)
             {
                 _head = null;
