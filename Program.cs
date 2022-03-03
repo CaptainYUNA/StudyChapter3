@@ -1,6 +1,7 @@
 ﻿using StudyChapter3.Collection;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace StudyChapter3
@@ -9,7 +10,47 @@ namespace StudyChapter3
     {
         static void Main(string[] args)
         {
+            var myList = new List<string>
+            {
+                "mouse", "cow", "tiger", "rabbit", "dragon", "snake"
+            };
+
+            var n = myList.Exists(s => s.Contains("x"));
+
             //LinkedList
+            //LinkedListTest();
+            var myArray = new MyCollection<string>();
+
+            myArray[0] = "CHOE";
+            myArray[1] = "YUN";
+            myArray[2] = "A";
+
+            myArray.Print();
+
+            var delegateArray = new[] { 6, 3, 1, 5, 19, 22, 2, 7, 4, 33, 22, 11 };
+
+            var odd = Count(delegateArray, delegate (int x) { return x % 2 == 0; });
+            var even = Count(delegateArray, delegate (int x) { return x % 2 != 0; }); //delegate를 이름 없이(무명) 사용하는 것
+
+            foreach (var i in Power(2, 8))
+            {
+                Console.Write("{0} ", i);
+            }
+        }
+
+        public static IEnumerable<int> Power(int number, int exponent)
+        {
+            var result = 1;
+
+            for (int i = 0; i < exponent; i++)
+            {
+                result *= number;
+                yield return result;
+            }
+        }
+
+        private static void LinkedListTest()
+        {
             var linkedList = new LinkedList();
 
             Initialize(linkedList);
@@ -194,26 +235,11 @@ namespace StudyChapter3
             {
                 Console.WriteLine("X");
             }
-
-            var myArray = new MyCollection<string>();
-
-            myArray[0] = "CHOE";
-            myArray[1] = "YUN";
-            myArray[2] = "A";
-
-            myArray.Print();
-
-            var delegateArray = new[] { 6, 3, 1, 5, 19, 22, 2, 7, 4, 33, 22, 11 };
-
-            //var test = delegateArray.Count(delegateArray, IsEven); //Q1. 왜 안 되는지 이해가 안 됨...
-
-            var odd = Count(delegateArray, delegate (int x) { return x % 2 == 0; });
-            var even = Count(delegateArray, delegate (int x) { return x % 2 != 0; }); //delegate를 이름 없이(무명) 사용하는 것
         }
 
         //delegate bool MemberTest(int a);
 
-        static int Count(int[] array, Func<int, bool> testMethod) //Q2. static으로 했을 때와 public을 붙였을 때
+        static int Count(int[] array, Func<int, bool> testMethod)
         {
             var count = 0;
 
@@ -228,8 +254,8 @@ namespace StudyChapter3
             return count;
         }
 
-        static public bool IsOdd(int n) { return n % 2 != 0; } //Q3. public static이 아니라 static public이라고 쓰는 것은?
-        static public bool IsEven(int n) { return n % 2 == 0; }
+        public static bool IsOdd(int n) { return n % 2 != 0; }
+        public static bool IsEven(int n) { return n % 2 == 0; }
 
         private static bool CheckIndex(int v1, int v2)
         {
