@@ -1,24 +1,138 @@
 ﻿using StudyChapter3.Collection;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace StudyChapter3
 {
+    //class Program2
+    //{
+    //    public void Test()
+    //    {
+    //        Program.Count(new int[0], new Program.MemberTest(x => x == 0));
+
+    //    }
+
+    //}
+    public static class MyEnumerable
+    {
+
+        class MyWhereExecutor<T> : IEnumerable<T>
+        {
+            private readonly IEnumerable<T> _source;
+            private Predicate<T> _condition;
+
+            public MyWhereExecutor(IEnumerable<T> source, Predicate<T> condition)
+            {
+                _source = source;
+                _condition = condition;
+            }
+
+            class MyWhereEnumerator : IEnumerator<T>
+            {
+                private readonly IEnumerable<T> _source;
+                private Predicate<T> _condition;
+
+                public MyWhereEnumerator(IEnumerable<T> source, Predicate<T> condition)
+                {
+                    _source = source;
+                    if (source is T[])
+                    {
+                        _array = (T[])source;
+                    }
+                    _condition = condition;
+                }
+
+                private int _index = -1;
+
+                private T[] _array;
+
+                public T Current => _array[_index];
+
+                object IEnumerator.Current => throw new NotImplementedException();
+
+                public void Dispose()
+                {
+
+                }
+
+                public bool MoveNext()
+                {
+                    _index++;
+                    while (_index < _array.Length && _condition(_array[_index]) != true)
+                    {
+                        _index++;
+                    }
+
+                    return _index < _array.Length;
+                }
+
+                public void Reset()
+                {
+                    _index = -1;
+                }
+            }
+            public IEnumerator<T> GetEnumerator()
+            {
+                return new MyWhereEnumerator(_source, _condition);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return new MyWhereEnumerator(_source, _condition);
+            }
+        }
+
+
+        //public static IEnumerable<T> MyWhere<T>(this IEnumerable<T> s, Predicate<T> condition)
+        //{
+        //    return new MyWhereExecutor<T>(s, condition);
+        //}
+
+
+
+        public static IEnumerable<T> MyWhere<T>(this IEnumerable<T> s, Predicate<T> condition)
+        {
+            foreach (var item in s)
+            {
+                if (condition(item))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        //public static IEnumerable<T> MyOrderBy<T,TKey>(this IEnumerable<T> s, Func<T,TKey> keySelector)
+        //{
+            
+        //}
+    }
+
+
+
+
     class Program
     {
+        public static void MyForeach<T>(IEnumerable<T> ie)
+        {
+            var etor = ie.GetEnumerator();
+
+            etor.Reset();
+
+            while (etor.MoveNext() == true)
+            {
+                Console.WriteLine(etor.Current);
+            }
+        }
+
         static void Main(string[] args)
         {
-            var myList = new List<string>
-            {
-                "mouse", "cow", "tiger", "rabbit", "dragon", "snake"
-            };
-
-            var n = myList.Exists(s => s.Contains("x"));
-
             //LinkedList
-            //LinkedListTest();
+            //TestLinkedList();
+
             var myArray = new MyCollection<string>();
 
             myArray[0] = "CHOE";
@@ -29,27 +143,91 @@ namespace StudyChapter3
 
             var delegateArray = new[] { 6, 3, 1, 5, 19, 22, 2, 7, 4, 33, 22, 11 };
 
-            var odd = Count(delegateArray, delegate (int x) { return x % 2 == 0; });
+            MemberTest d1 = delegate (int x) { return x % 2 == 0; };
+            MemberTest d2 = __AnonouysMethod_1;// delegate(int x) { return x % 2 == 0; };
+            MemberTest d3 = x =>
+                             {
+                                 return x % 2 == 0;
+                             };
+
+            MemberTest d4 = (x => x % 2 == 0);
+
+            var ev = delegateArray.Where(x => x % 2 == 0).ToArray();
+            var e2 = delegateArray.Where(new Func<int, bool>(IsEven)).ToArray();
+            var e3 = Enumerable.ToArray(Enumerable.Where(delegateArray, new Func<int, bool>(IsEven)));
+            var e4 = delegateArray.MyWhere(x => x % 2 == 0).ToArray();
+
+
+            MemberTest d5 = new MemberTest(IsOdd);
+            MemberTest d6 = IsOdd;
+            //MemberTest d2 = IsOdd(3);
+
+
+            var odd = Count(delegateArray, d1);
+
             var even = Count(delegateArray, delegate (int x) { return x % 2 != 0; }); //delegate를 이름 없이(무명) 사용하는 것
 
-            foreach (var i in Power(2, 8))
-            {
-                Console.Write("{0} ", i);
-            }
+            //var even = Count(delegateArray, new Func<int,bool>(IsOdd)); //delegate를 이름 없이(무명) 사용하는 것
+
         }
 
-        public static IEnumerable<int> Power(int number, int exponent)
+
+
+        private static bool __AnonouysMethod_1(int x)
         {
-            var result = 1;
-
-            for (int i = 0; i < exponent; i++)
-            {
-                result *= number;
-                yield return result;
-            }
+            return x % 2 == 0;
         }
 
-        private static void LinkedListTest()
+        private MemberTest d3 = delegate (int x) { return x % 2 == 0; };
+
+
+        static public bool IsOdd(int n)
+        {
+            return n % 2 != 0;
+        }
+
+        //Q1. public static이 아니라 static public이라고 쓰는 것은?
+        static public bool IsEven(int n) { return n % 2 == 0; }
+
+        delegate bool TestMethod(int x);
+
+        delegate TReturn TestMethod<T1, TReturn>(T1 x);
+
+        //delegate TReturn Func<T1, TReturn>(T1 x);
+
+        delegate void DoMethod(int x);
+        delegate void DoMethod<T1>(T1 x);
+        delegate void DoMethod<T1, T2>(T1 x, T2 y);
+
+        //delegate void Action<T1>(T1 x);
+
+        delegate bool MemberTest(int a);
+
+        class Member
+        {
+
+        }
+
+        static int Count(int[] array, MemberTest testMethod) //Q2. static으로 했을 때와 public을 붙였을 때
+        {
+            var count = 0;
+
+            foreach (var item in array)
+            {
+                if (testMethod(item) == true)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+    }
+
+    public class Prev
+    {
+
+        private static void TestLinkedList()
         {
             var linkedList = new LinkedList();
 
@@ -99,7 +277,6 @@ namespace StudyChapter3
             Check(linkedList, 99, 98);
 
             //var test = linkedList.FindIndex(110);
-            //Q. 값 비교하는 Check 함수를 안 보는 이유? 두 번째 매개변수가 하나라서인지?
             CheckIndex(linkedList.FindIndex(110), -1);
             CheckIndex(linkedList.FindIndex(99), 0);
             CheckIndex(linkedList.FindIndex(98), 1);
@@ -236,26 +413,6 @@ namespace StudyChapter3
                 Console.WriteLine("X");
             }
         }
-
-        //delegate bool MemberTest(int a);
-
-        static int Count(int[] array, Func<int, bool> testMethod)
-        {
-            var count = 0;
-
-            foreach (var item in array)
-            {
-                if (testMethod(item) == true)
-                {
-                    count++;
-                }
-            }
-
-            return count;
-        }
-
-        public static bool IsOdd(int n) { return n % 2 != 0; }
-        public static bool IsEven(int n) { return n % 2 == 0; }
 
         private static bool CheckIndex(int v1, int v2)
         {
