@@ -22,7 +22,5 @@ namespace StudyChapter3.Collection
                 Console.WriteLine(array[i]);
             }
         }
-
-        
     }
 }
