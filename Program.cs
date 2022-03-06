@@ -8,15 +8,6 @@ using System.Linq;
 
 namespace StudyChapter3
 {
-    //class Program2
-    //{
-    //    public void Test()
-    //    {
-    //        Program.Count(new int[0], new Program.MemberTest(x => x == 0));
-
-    //    }
-
-    //}
     public static class MyEnumerable
     {
 
@@ -107,14 +98,14 @@ namespace StudyChapter3
 
         //public static IEnumerable<T> MyOrderBy<T,TKey>(this IEnumerable<T> s, Func<T,TKey> keySelector)
         //{
-            
+
         //}
     }
 
 
 
 
-    class Program
+    public class Program
     {
         public static void MyForeach<T>(IEnumerable<T> ie)
         {
@@ -130,6 +121,53 @@ namespace StudyChapter3
 
         static void Main(string[] args)
         {
+
+            //Chapter 3 연습 문제 1.
+            var doubleList = new List<double> { 12, 87, 94, 14, 53, 20, 40, 35, 76, 91, 31, 17, 48 };
+
+            var existsCollection = doubleList.Where(x => x % 8 == 0 || x % 9 == 0);
+            PrintCollection(existsCollection);
+
+            var existsBool = doubleList.Exists(x => x % 8 == 0 || x % 9 == 0);
+            Console.WriteLine(existsBool);
+
+            doubleList.ForEach(delegate (double value)
+            {
+                Console.WriteLine(value / 2.0);
+            });
+
+            PrintCollection(doubleList);
+
+            var whereMethod = doubleList.Where(x => x > 50);
+            PrintCollection(whereMethod);
+
+            var selectMethod = doubleList.Select(x => x * 2).ToList();
+            PrintCollection(selectMethod);
+
+            //Chapter 3 연습 문제 2.
+            var cityList = new List<string>
+            {
+                "Seoul", "New Delhi", "Bangkok", "London", "Paris", "Berlin", "Canberra", "HongKong"
+            };
+
+            var line = Console.ReadLine();
+
+            var findIndex = cityList.FindIndex(x => x == line);
+            Console.WriteLine($"{line} in {findIndex}");
+
+            var countCity = cityList.Count(x => x.Contains('o'));
+            Console.WriteLine(countCity);
+
+            var arrayCity = cityList.Where(x => x.Contains('o')).ToArray();
+            Console.WriteLine("이름에 'o'가 포함된 도시 명");
+            foreach (var item in arrayCity)
+            {
+                Console.WriteLine(item);
+            }
+
+            var findB = cityList.Where(x => x.StartsWith('B')).Count();
+            Console.WriteLine(findB);
+
             //LinkedList
             //TestLinkedList();
 
@@ -146,9 +184,9 @@ namespace StudyChapter3
             MemberTest d1 = delegate (int x) { return x % 2 == 0; };
             MemberTest d2 = __AnonouysMethod_1;// delegate(int x) { return x % 2 == 0; };
             MemberTest d3 = x =>
-                             {
-                                 return x % 2 == 0;
-                             };
+            {
+                return x % 2 == 0;
+            };
 
             MemberTest d4 = (x => x % 2 == 0);
 
@@ -171,7 +209,13 @@ namespace StudyChapter3
 
         }
 
-
+        private static void PrintCollection(IEnumerable<double> existsCollection)
+        {
+            foreach (var item in existsCollection)
+            {
+                Console.WriteLine(item);
+            }
+        }
 
         private static bool __AnonouysMethod_1(int x)
         {

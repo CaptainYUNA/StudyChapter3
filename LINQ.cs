@@ -48,8 +48,9 @@ namespace StudyChapter3.Collection
             var lowerList = list.ConvertAll(x => x.ToLower());
             foreach (var item in lowerList)
             {
-                Console.WriteLine(itemr);
+                Console.WriteLine(item);
             }
+
         }
     }
 }

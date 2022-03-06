@@ -7,7 +7,10 @@ namespace StudyChapter3.Collection
 {
     public class Predicate
     {
-        
+        public void PredicateTeset()
+        {
+
+        }
     }
 }
 
