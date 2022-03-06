@@ -124,25 +124,31 @@ namespace StudyChapter3
 
             //Chapter 3 연습 문제 1.
             var doubleList = new List<double> { 12, 87, 94, 14, 53, 20, 40, 35, 76, 91, 31, 17, 48 };
-
+            Console.WriteLine("Exist Method");
             var existsCollection = doubleList.Where(x => x % 8 == 0 || x % 9 == 0);
             PrintCollection(existsCollection);
 
             var existsBool = doubleList.Exists(x => x % 8 == 0 || x % 9 == 0);
             Console.WriteLine(existsBool);
+            Console.WriteLine("------------------------------");
 
+            Console.WriteLine("ForEach Method");
             doubleList.ForEach(delegate (double value)
             {
                 Console.WriteLine(value / 2.0);
             });
+            Console.WriteLine("------------------------------");
 
             PrintCollection(doubleList);
 
+            Console.WriteLine("Where Method");
             var whereMethod = doubleList.Where(x => x > 50);
             PrintCollection(whereMethod);
 
+            Console.WriteLine("Select Method");
             var selectMethod = doubleList.Select(x => x * 2).ToList();
             PrintCollection(selectMethod);
+            Console.WriteLine("------------------------------");
 
             //Chapter 3 연습 문제 2.
             var cityList = new List<string>
@@ -152,21 +158,29 @@ namespace StudyChapter3
 
             var line = Console.ReadLine();
 
+            Console.WriteLine("FindIndex Method");
             var findIndex = cityList.FindIndex(x => x == line);
             Console.WriteLine($"{line} in {findIndex}");
+            Console.WriteLine("------------------------------");
 
+            Console.WriteLine("Count Method");
             var countCity = cityList.Count(x => x.Contains('o'));
             Console.WriteLine(countCity);
+            Console.WriteLine("------------------------------");
 
+            Console.WriteLine("Contains Method, ToArray Method");
             var arrayCity = cityList.Where(x => x.Contains('o')).ToArray();
             Console.WriteLine("이름에 'o'가 포함된 도시 명");
             foreach (var item in arrayCity)
             {
                 Console.WriteLine(item);
             }
+            Console.WriteLine("------------------------------");
 
             var findB = cityList.Where(x => x.StartsWith('B')).Count();
             Console.WriteLine(findB);
+            Console.WriteLine($"{cityList[findB]}");
+            Console.WriteLine("------------------------------");
 
             //LinkedList
             //TestLinkedList();
@@ -215,6 +229,7 @@ namespace StudyChapter3
             {
                 Console.WriteLine(item);
             }
+            Console.WriteLine("------------------------------");
         }
 
         private static bool __AnonouysMethod_1(int x)
